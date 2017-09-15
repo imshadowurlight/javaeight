@@ -1,4 +1,5 @@
-import java.util.Arrays;
+import java.time.LocalDate;
+import java.util.*;
 
 /*
 * 以下资料摘自官方+网上资料
@@ -78,6 +79,92 @@ public class LambdaPractice {
         Converter.staticConvert2();     //调用静态方法(咦,这跟一般的静态方法没有区别啊,只是省略掉了接口的实现,直接在接口处写方法体)
     }
 
+    /**
+     * 方法引用--类的静态方法引用
+     * */
+    public static void test7(){
+        Person[] persons = new Person[]{
+                new Person("003", LocalDate.of(2016,9,1)),
+                new Person("001", LocalDate.of(2016,2,1)),
+                new Person("002", LocalDate.of(2017,3,1)),
+                new Person("004", LocalDate.of(2016,12,1))
+        };
+
+        // 假设我们有一个Person数组，并且想对它进行排序，这时候，我们可能会这样写
+        // 使用匿名类,也就是对Comparator接口进行实现了
+        Arrays.sort(persons, new Comparator<Person>() {
+            @Override
+            public int compare(Person a, Person b) {
+                return a.getBirthday().compareTo(b.getBirthday());
+            }
+        });
+
+        for(Person p:persons){
+            System.out.println(p);
+        }
+        System.out.println("====");
+
+        //这里，我们首先要注意Comparator接口是一个函数式接口，因此我们可以使用Lambda表达式，而不需要定义一个实现Comparator接口的类，并创建它的实例对象，传给sort方法。
+        //1. 使用lambda表达式解决
+        Person[] persons_one = new Person[]{
+                new Person("003", LocalDate.of(2016,9,1)),
+                new Person("001", LocalDate.of(2016,2,1)),
+                new Person("002", LocalDate.of(2017,3,1)),
+                new Person("004", LocalDate.of(2016,12,1))
+        };
+        Arrays.sort(persons_one, (Person a, Person b) -> {
+            return a.getBirthday().compareTo(b.getBirthday());
+        });
+        for(Person p:persons_one){
+            System.out.println(p);
+        }
+        System.out.println("====");
+
+
+        //引用方法--类的静态方法引用
+        Person[] persons_two = new Person[]{
+                new Person("003", LocalDate.of(2016,9,1)),
+                new Person("001", LocalDate.of(2016,2,1)),
+                new Person("002", LocalDate.of(2017,3,1)),
+                new Person("004", LocalDate.of(2016,12,1))
+        };
+        Arrays.sort(persons_two, Person::compareByAge);
+        for(Person p:persons_two){
+            System.out.println(p);
+        }
+
+    }
+
+    /**
+     *  方法引用--构造器引用
+     *  搞了半天,还是没有看懂,擦咧
+     * */
+    public static void test8(){
+        CatFactory catFactory = Cat :: new;
+        Cat oldCat = catFactory.create();
+        System.out.println("千年的老猫妖实际年龄: " + oldCat.getAge());
+    }
+
+    /**
+     * 方法引用--类的普通方法引用
+     * */
+    public static void test10(){
+
+    }
+
+    /**
+     * 方法引用--实例的普通方法引用
+     * */
+    public static void test11(){
+
+    }
+
+    /**
+     * 重复注解: 在一个地方可以多次使用同一个注解
+     *
+     * */
+
+
     public static void main(String[] args) {
         test1();
         System.out.println("=====================test1 end");
@@ -91,6 +178,10 @@ public class LambdaPractice {
         System.out.println("=====================test5 end");
         test6();
         System.out.println("=====================test6 end");
+        test7();
+        System.out.println("=====================test7 end");
+        test8();
+        System.out.println("=====================test8 end");
     }
 
 
